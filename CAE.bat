@@ -3,16 +3,16 @@
 @ECHO OFF
 SETLOCAL EnableDelayedExpansion
 SETLOCAL EnableExtensions
-MODE CON: CP SELECT=65001>nul
+MODE CON: CP SELECT=65001>NUL
 :: -- SCRIPT START -- ::
 CLS
-SET CMDS="TDSC INT" "TDSC FLOAT" "TDSC STR" "TDSC NUM" "TDSC BOOL" "TDSC ARY" "TDSC HEX" "TDSC MEM" "TDSC FUNC" "TDSC ANY" "CAE.EXT" "CAE.CFG" "CAE.CLR" "SYSC HLT" "SYSC RBT" "SYSC HIB" "SYSC HCF" "SYSC KBC CHK" "SYSC KBC CPD" "KBC.KEYS" "#Print" "#RaiseError" "#Concat" "RPR.RPT" "CAE.HLP" "CAE.ABT" "CAE.CFG" "CAE.DAT" "CAE.EDS" "#Calc" "CAE.RBT"
-SET "Version=0.15.0"
+SET CMDS="CAE.EXT" "CAE.CFG" "CAE.CLR" "SYSC HLT" "SYSC RBT" "SYSC HIB" "SYSC HCF" "SYSC KBC CHK" "SYSC KBC CPD" "KBC.KEYS" "#Print" "#RaiseError" "#Concat" "RPR.RPT" "CAE.HLP" "CAE.ABT" "CAE.CFG" "CAE.DAT" "CAE.EDS" "#Calc" "CAE.RBT" "#TimeShow" "#DateShow"
+SET "Version=0.17.0"
 SET "SpecialVersionType="
 SET "VersionType=CLOSED BETA"
 SET "Edition=DEVELOPER"
 SET "WinTitle=CYBER-ASSEMBLY 2.0 ASSEMBLER EMULATOR"
-TITLE %WinTitle%
+TITLE !WinTitle!
 SET "QuotWarn=ALWAYS KEEP IN MIND: IGNORE ALL QUOTATION MARKS EXCEPT IN ERROR MESSAGES (MESSAGE WILL ONLY BE SHOWN ONCE PER SESSION)"
 SET "ExecProc=MProc"
 IF "!SpecialVersionType!"=="" (
@@ -32,52 +32,16 @@ ECHO:
 @SET "Instr="
 ECHO:
 SET /P Instr="~ "
-:: -- TDSC INSTRUCTION -- ::
-IF "!Instr!"=="TDSC INT" (
-   ECHO  ~^> Integer: whole number
-   GOTO :INIT
-)
-IF "!Instr!"=="TDSC FLOAT" (
-   ECHO  ~^> Floating Point: decimal
-   GOTO :INIT
-)
-IF "!Instr!"=="TDSC STR" (
-   ECHO  ~^> String: regular text.
-   GOTO :INIT
-)
-IF "!Instr!"=="TDSC NUM" (
-   ECHO  ~^> Number: optional replacement f^or INT and FLOAT datatypes.
-   GOTO :INIT
-)
-IF "!Instr!"=="TDSC BOOL" (
-   ECHO  ~^> Boolean: true/false.
-   GOTO :INIT
-)
-IF "!Instr!"=="TDSC ARY" (
-   ECHO  ~^> Array: list of values.
-   GOTO :INIT
-)
-IF "!Instr!"=="TDSC HEX" (
-   ECHO  ~^> Hexadecimal
-   GOTO :INIT
-)
-IF "!Instr!"=="TDSC MEM" (
-   ECHO  ~^> Memory Address
-   GOTO :INIT
-)
-IF "!Instr!"=="TDSC FUNC" (
-   ECHO  ~^> Function
-   GOTO :INIT
-)
-IF "!Instr!"=="TDSC ANY" (
-   ECHO  ~^> Any Datatype: only available f^or the built-in #Array and #AssocArray functions, unavailable in the emulator.
-   GOTO :INIT
-)
 :: -- CAE INSTRUCTIONS -- ::
 IF "!Instr!"=="CAE.EXT" (
-   ECHO  CYBER-ASSEMBLY 2.0 ASSEMBLER EMULATOR SESSION TERMINATED
+   ECHO  TERMINATING EMULATOR SESSION...
+   PING localhost -n 4 > NUL
+   ECHO:
+   ECHO  EMULATOR SESSION TERMINATED
    ECHO:
    ECHO:
+   ENDLOCAL DisableDelayedExpansion
+   ENDLOCAL DisableExtensions
    EXIT
 )
 IF "!Instr!"=="CAE.CLR" (
@@ -97,12 +61,6 @@ IF "!Instr!"=="SYSC HIB" (
    ECHO  !ExecProc! ^^!^> ^0 : EMULATOR CAN NOT HIBERNATE A COMPONENT
    GOTO :INIT
 )
-IF "!Instr!"=="SYSC HCF" (
-   ECHO  ^^!^> ALERT: PROCESSOR FREEZE ATTEMPT DETECTED, ATTEMPTING TO ABORT...
-   PING localhost -n 6 >NUL
-   ECHO  ^^!^> PROCESSOR FREEZE AVERTED
-   GOTO :INIT
-)
 IF "!Instr!"=="SYSC KBC CHK" (
    SET "WinTitle=CYBER-ASSEMBLY 2.0 ASSEMBLER EMULATOR - SYSTEM FAILURE"
    TITLE !WinTitle!
@@ -111,17 +69,17 @@ IF "!Instr!"=="SYSC KBC CHK" (
    ECHO  SYSTEM FAILURE - SYSTEM HALTED
    ECHO     MACHINE_CHECK_EXCEPTION
    ECHO:
-   ECHO  COMPONENT "Component Integrity Checker" HAS DETECTED A CRITICAL FAILURE IN COMPONENT "MProc"
+   ECHO  A CRITICAL FAILURE HAS BEEN DETECTED IN COMPONENT "MProc"
    ECHO  THE SYSTEM HAS BEEN HALTED TO PREVENT DATA LOSS
    ECHO:
    ECHO  ---- DETAILS ------------------------------------------------------
-   ECHO    CATCHER : "Component Integrity Checker"
+   ECHO    CATCHER : "Processor Integrity Checker"
    ECHO    CATCHER_MSG : CRITICAL FAILURE IN MAIN PROCESSOR, SYSTEM HALTED
    ECHO    KBC_KEY : CHK
    ECHO  -------------------------------------------------------------------
    ECHO:
    ECHO  PRESS ^[RETURN^] TO RESTART
-   pause>nul
+   PAUSE>NUL
    SET "ExecProc=ResProc"
    CLS
    SET "WinTitle=CYBER-ASSEMBLY 2.0 ASSEMBLER EMULATOR"
@@ -139,14 +97,14 @@ IF "!Instr!"=="SYSC KBC CPD" (
    ECHO  A CRITICAL SYSTEM PROCESS HAS TERMINATED
    ECHO  THE SYSTEM HAS BEEN HALTED TO PREVENT DATA LOSS
    ECHO:
-   ECHO  --- DETAILS ---------------------------------------------------------
+   ECHO  ---- DETAILS ---------------------------------------------------------
    ECHO    CATCHER : KRNL
    ECHO    CATCHER_MSG : A CRITICAL SYSTEM PROCESS TERMINATED, SYSTEM HALTED
    ECHO    KBC_KEY : CPD
-   ECHO  ---------------------------------------------------------------------
+   ECHO  ----------------------------------------------------------------------
    ECHO:
    ECHO  PRESS ^[RETURN^] TO RESTART
-   pause>nul
+   PAUSE>NUL
    SET "ExecProc=ResProc"
    CLS
    SET "WinTitle=CYBER-ASSEMBLY 2.0 ASSEMBLER EMULATOR"
@@ -164,14 +122,14 @@ IF "!Instr!"=="SYSC KBC KIF" (
    ECHO  THE KERNEL HAS FAILED TO INITIALISE
    ECHO  THE SYSTEM HAS BEEN HALTED TO PREVENT DATA LOSS
    ECHO:
-   ECHO  --- DETAILS -------------------------------------------------------
+   ECHO  ---- DETAILS -------------------------------------------------------
    ECHO    CATCHER : CyberBootMgr
    ECHO    CATCHER_MSG : MAIN KERNEL FAILED TO INITIALISE, SYSTEM HALTED 
    ECHO    KBC_KEY : KIF
-   ECHO  -------------------------------------------------------------------
+   ECHO  --------------------------------------------------------------------
    ECHO:
    ECHO  PRESS ^[RETURN^] TO RESTART
-   pause>nul
+   PAUSE>NUL
    SET "ExecProc=ResProc"
    CLS
    SET "WinTitle=CYBER-ASSEMBLY 2.0 ASSEMBLER EMULATOR"
@@ -196,16 +154,15 @@ IF "!Instr!"=="#Print" (
    GOTO :INIT
 )
 IF "!Instr!"=="#RaiseError" (
-   SET /P msg="?> msg [STR): "
+   SET /P msg="?> msg [STR]: "
    SET /P errLvl="?> errLvl [INT]: "
    SET /P statCode="?> statCode [INT]: "
-   SET /P support="?> support [STR]: "
    IF "!errLvl!"=="1" (
-      ECHO  #^> A CRITICAL ERROR HAS OCCURED: !msg! ^(!statCode!^). CONTACT !support! ^FOR SUPPORT. EXECUTION WILL NOW HALT.
+      ECHO  #^> A CRITICAL ERROR HAS OCCURED: !msg! ^(!statCode!^). EXECUTION WILL NOW HALT.
       GOTO :INIT
    )
    IF "!errLvl!"=="0" (
-      ECHO  #^> AN ERROR HAS OCCURED: !msg! ^(!statCode!^). CONTACT !support! ^FOR SUPPORT. EXECUTION WILL CONTINUE.
+      ECHO  #^> AN ERROR HAS OCCURED: !msg! ^(!statCode!^). EXECUTION WILL CONTINUE.
       GOTO :INIT
    )
    GOTO :INIT
@@ -219,9 +176,9 @@ IF "!Instr!"=="#Concat" (
 )
 IF "!Instr!"=="#Calc" (
    SET OPS="+" "-" "*" "/"
-   SET /P "Num1=?> firstNumber [NUM]: "
+   SET /P "Num1=?> firstNumber [INT]: "
    SET /P "Op=?> Operation [STR]: "
-   SET /P "Num2=?> secondNumber [NUM]: "
+   SET /P "Num2=?> secondNumber [INT]: "
    IF "!Num1!"=="0" (
       IF "!Op!"=="/" (
          IF "!Num2!"=="0" (
@@ -255,34 +212,51 @@ IF "!Instr!"=="#Calc" (
       GOTO :INIT
    )
 )
+IF "!Instr!"=="#AssocArray" (
+   ECHO  !ExecProc! ^^!^> ^0 : ASSOCIATIVE ARRAYS ARE UNVAILABLE IN THE EMULATOR
+   GOTO :INIT
+)
+IF "!Instr!"=="#Array" (
+   ECHO  !ExecProc! ^^!^> ^0 : ARRAYS ARE UNVAILABLE IN THE EMULATOR
+   GOTO :INIT
+)
+IF "!Instr!"=="#TimeShow" (
+   FOR /F "delims=" %%i IN ('TIME /T') DO (
+      SET TIME=%%i
+      )
+      ECHO  #^> !TIME!
+   GOTO :INIT
+)
+IF "!Instr!"=="#DateShow" (
+   FOR /F "delims=" %%i IN ('DATE /T') DO (
+      SET DATE=%%i
+      )
+      ECHO  #^> !DATE!
+   GOTO :INIT
+)
 :: -- INSTRUCTIONS -- ::
 IF "!Instr!"=="RPR.RPT" (
-   SET /P times="?> times (INT): "
-   SET /P output="?> output (STR): "   
-   FOR /L %%i IN (1,1,!times!) DO (
-      ECHO  #^> !output!
-   )
+   ECHO  !ExecProc! ^^!^> ^0 : "!Instr!" IS UNVAILABLE IN THE EMULATOR
    GOTO :INIT
 )
 :: -- CAE INSTRUCTIONS -- ::
 IF "!Instr!"=="CAE.HLP" (
    ECHO  ---------- CYBER-ASSEMBLY 2.0 ASSEMBLER EMULATOR: HELP FILE -------------------------------
-   ECHO    "TDSC": Shows a description of the given datatype. EXAMPLE: TDSC STR
    ECHO    "CAE.CLR" : Clears output.
-   ECHO    "SYSC HCF" : Joke instruction. Stands for Halt and Catch Fire
    ECHO    "SYSC KBC" : Crash the emulator. HELP FILE: "KBC.KEYS"
-   ECHO    "RPR.RPT" : Start a fixed repeater
-   ECHO    "CAE.EXT" : Exits the Cyber-Assembly 2.0 Assembler Emulator
+   ECHO    "CAE.EXT" : Exits the Emulator
    ECHO    "CAE.HLP" : Summons this help file
-   ECHO    "CAE.ABT" : Summons a help file regarding the Cyber-Assembly 2.0 Assembler Emulator
+   ECHO    "CAE.ABT" : Summons a help file regarding the Emulator
    ECHO    "CAE.DAT" : Summons datatypes help file
-   ECHO    "CAE.CFG" : Configure the Cyber-Assembly 2.0 Assembler Emulator
+   ECHO    "CAE.CFG" : Configure the Emulator
    ECHO    "CAE.EDS" : Summons help file regarding the editions
-   ECHO    "CAE.RBT" : Restarts the Cyber-Assembly 2.0 Assembler Emulator
+   ECHO    "CAE.RBT" : Restarts the Emulator
    ECHO    "#Print" : Outputs something
    ECHO    "#RaiseError" : Outputs a custom error message
-   ECHO    "#Concat" : Concatenates two strings
-   ECHO    "#Calc" : Calculates the result of two numbers
+   ECHO    "#Concat" : Concatenates two strings ^(No spaces^)
+   ECHO    "#Calc" : Calculates the result of two integers
+   ECHO    "#TimeShow" : Displays the current system time
+   ECHO    "#DateShow" : Displays the current system date
    ECHO  -------------------------------------------------------------------------------------------
    ECHO:
    ECHO:
@@ -294,7 +268,7 @@ IF "!Instr!"=="CAE.HLP" (
    ECHO:
    ECHO:
    ECHO  ------------------------------- RETURN SYMBOLS --------------------------------------------
-   ECHO    "~>" : Processor result. EXAMPLE: "~> String: regular text"
+   ECHO    "§>" : Processor result. EXAMPLE: "§> String: regular text"
    ECHO    "^!>" : Processor returned error. EXAMPLE: "%ExecProc% ^!> 0: INSTRUCTION NOT FOUND"
    ECHO    "?>" : Argument prompt. EXAMPLE: "?> output [STR]:"
    ECHO    "#>" : Function output. EXAMPLE: "#> Example"
@@ -313,23 +287,27 @@ IF "!Instr!"=="CAE.ABT" (
    GOTO :INIT
 )
 IF "!Instr!"=="CAE.RBT" (
+   ENDLOCAL DisableDelayedExpansion
+   ENDLOCAL DisableExtensions
    GOTO :STRT
 )
 IF "!Instr!"=="CAE.CFG" (
-   SET CFG-CMDS="HLP" "SET EP" "SET WT" "EXT" "GET EP" "GET WT" "SET WT -FLL" "SET WT -RST"
+   SET CFG-CMDS="HLP" "SET EP" "SET WT" "EXT" "GET EP" "GET WT" "SET WT -F" "SET WT -R"
    ECHO EXECUTE "HLP" TO SUMMON HELP FILE.
    :: -------------------------- ::
    :CFG_INIT
+   @SET "cfgType="
    ECHO:
    SET /P cfgType="CAE_CFG> "
    :: -------------------------- ::
    IF "!cfgType!"=="HLP" (
       ECHO  ---- CYBER-ASSEMBLY 2.0 ASSEMBLER EMULATOR CONFIGURATION: HELP FILE ----------------
       ECHO    "SET EP" : SETS THE EXECUTING PROCESSOR
-      ECHO    "SET WT" : SETS WINDOW TITLE ^(APPEND " -RST" TO RESET, " -FLL" FOR FULL VALUE^)
+      ECHO    "SET WT" : SETS WINDOW TITLE ^(APPEND " -R" TO RESET, " -F" FOR FULL VALUE^)
       ECHO    "EXT" : EXIT CONFIGURATION
       ECHO    "GET EP" : GETS THE EXECUTING PROCESSOR
       ECHO    "GET WT" : GETS THE WINDOW TITLE
+      ECHO    "GET TME" : GETS CURRENT TIME
       ECHO  ------------------------------------------------------------------------------------
       GOTO :CFG_INIT
    )
@@ -339,16 +317,16 @@ IF "!Instr!"=="CAE.CFG" (
       ECHO  EXECUTING PROCESSOR CHANGED TO "!ExecProc!" 
       GOTO :CFG_INIT
    )
-   IF "!cfgType!"=="SET WT -RST" (
+   IF "!cfgType!"=="SET WT -R" (
       SET "WinTitle=CYBER-ASSEMBLY 2.0 ASSEMBLER EMULATOR"
       TITLE !WinTitle!
       ECHO  WINDOW TITLE HAS BEEN RESET TO DEFAULT
       GOTO :CFG_INIT
    )
-   IF "!cfgType!"=="SET WT -INIT" (
+   IF "!cfgType!"=="SET WT -F" (
       SET "WinTitle=!InitWinTitle!"
       TITLE !WinTitle!
-      ECHO  WINDOW TITLE HAS BEEN SET TO INITIAL VALUE
+      ECHO  WINDOW TITLE HAS BEEN SET TO FULL VALUE
       GOTO :CFG_INIT
    )
    IF "!cfgType!"=="SET WT" (
@@ -368,10 +346,15 @@ IF "!Instr!"=="CAE.CFG" (
       ECHO  WINDOW TITLE : "!WinTitle!"
       GOTO :CFG_INIT
    )
+   IF "!cfgType!"=="" (
+      ECHO  CAE_CFG ^^!^> ^0 : NO CONFIGURATION COMMAND SPECIFIED
+      GOTO :CFG_INIT
+   )
    IF "!cfgType!" NEQ "!CFG-CMDS!" (
       ECHO  CAE_CFG ^^!^> ^0 : "!cfgType!" IS NOT A VALID CONFIGURATION COMMAND
       GOTO :CFG_INIT
    )
+
 )
 IF "!Instr!"=="CAE.DAT" (
    ECHO  ---------------------------------------------------------------------------------------------------------
