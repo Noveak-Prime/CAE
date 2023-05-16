@@ -6,8 +6,8 @@ SETLOCAL EnableExtensions
 MODE CON: CP SELECT=65001>NUL
 :: -- SCRIPT START -- ::
 CLS
-SET CMDS="CAE.EXT" "CAE.CFG" "CAE.CLR" "SYSC HLT" "SYSC RBT" "SYSC HIB" "SYSC HCF" "SYSC KBC CHK" "SYSC KBC CPD" "KBC.KEYS" "#Print" "#RaiseError" "#RaErr" "#Concat" "RPR.RPT" "CAE.HLP" "CAE.ABT" "CAE.CFG" "CAE.DAT" "CAE.EDS" "#Calc" "CAE.RBT" "#TimeShow" "#DateShow"
-SET "Version=0.17.1"
+SET CMDS="CAE.EXT" "CAE.CFG" "CAE.CLR" "SYSC HLT" "SYSC RBT" "SYSC HIB" "SYSC HCF" "SYSC KBC CHK" "SYSC KBC CPD" "KBC.KEYS" "#print" "#RaiseError" "#RaErr" "#Concat" "RPR.RPT" "CAE.HLP" "CAE.ABT" "CAE.CFG" "CAE.DAT" "CAE.EDS" "#Calc" "CAE.RBT" "#TimeShow" "#DateShow"
+SET "Version=0.17.3"
 SET "SpecialVersionType="
 SET "VersionType=CLOSED BETA"
 SET "Edition=DEVELOPER"
@@ -32,7 +32,6 @@ ECHO:
 @SET "Instr="
 ECHO:
 SET /P Instr="~ "
-:: -- CAE INSTRUCTIONS -- ::
 IF "!Instr!"=="CAE.EXT" (
    ECHO  TERMINATING EMULATOR SESSION...
    PING localhost -n 4 > NUL
@@ -148,9 +147,9 @@ IF "!Instr!"=="KBC.KEYS" (
    GOTO :INIT
 )
 :: -- FUNCTIONS -- ::
-IF "!Instr!"=="#Print" (
-   SET /P output="?> output [STR]: "
-   ECHO  #^> !output!
+IF "!Instr!"=="#print" (
+   SET /P data="?> data [STR]: "
+   ECHO  #^> !data!
    GOTO :INIT
 )
 IF "!Instr!"=="#RaiseError" (
@@ -158,25 +157,26 @@ IF "!Instr!"=="#RaiseError" (
    SET /P errLvl="?> errLvl [INT]: "
    SET /P statCode="?> statCode [INT]: "
    IF "!errLvl!"=="1" (
-      ECHO  #^> A CRITICAL ERROR HAS OCCURED: !msg! ^(!statCode!^). EXECUTION WILL NOW HALT.
+      ECHO  #^> A CRITICAL ERROR HAS OCCURED: !msg!^. STAT_CODE: !statCode!^. EXECUTION WILL NOW HALT.
       GOTO :INIT
    )
    IF "!errLvl!"=="0" (
-      ECHO  #^> AN ERROR HAS OCCURED: !msg! ^(!statCode!^). EXECUTION WILL CONTINUE.
+      ECHO  #^> AN ERROR HAS OCCURED: !msg!^. STAT_CODE: !statCode!^. EXECUTION WILL CONTINUE
       GOTO :INIT
    )
    GOTO :INIT
 )
+
 IF "!Instr!"=="#RaErr" (
    SET /P msg="?> msg [STR]: "
    SET /P errLvl="?> errLvl [INT]: "
    SET /P statCode="?> statCode [INT]: "
    IF "!errLvl!"=="1" (
-      ECHO  #^> A CRITICAL ERROR HAS OCCURED: !msg! ^(!statCode!^). EXECUTION WILL NOW HALT.
+      ECHO  #^> A CRITICAL ERROR HAS OCCURED: !msg!^. RETURN CODE: !statCode!^. EXECUTION WILL NOW HALT.
       GOTO :INIT
    )
    IF "!errLvl!"=="0" (
-      ECHO  #^> AN ERROR HAS OCCURED: !msg! ^(!statCode!^). EXECUTION WILL CONTINUE.
+      ECHO  #^> AN ERROR HAS OCCURED: !msg!^. RETURN CODE: !statCode!^. EXECUTION WILL CONTINUE.
       GOTO :INIT
    )
    GOTO :INIT
@@ -265,7 +265,7 @@ IF "!Instr!"=="CAE.HLP" (
    ECHO    "CAE.CFG" : Configure the Emulator
    ECHO    "CAE.EDS" : Summons help file regarding the editions
    ECHO    "CAE.RBT" : Restarts the Emulator
-   ECHO    "#Print" : Outputs something
+   ECHO    "#print" : Outputs something
    ECHO    "#RaiseError" : Outputs a custom error message
    ECHO    "#RaErr" : Alias of above
    ECHO    "#Concat" : Concatenates two strings ^(No spaces^)
