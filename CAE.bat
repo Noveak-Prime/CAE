@@ -1,13 +1,13 @@
 :: -- SET-UP -- ::
 :STRT
 @ECHO OFF
-SETLOCAL EnableDelayedExpansion
+SETLOCAL EnableDelayedExpansion 
 SETLOCAL EnableExtensions
 MODE CON: CP SELECT=65001>NUL
 :: -- SCRIPT START -- ::
 CLS
-SET CMDS="CAE.EXT" "CAE.CFG" "CAE.CLR" "SYSC HLT" "SYSC RBT" "SYSC HIB" "SYSC HCF" "SYSC KBC CHK" "SYSC KBC CPD" "KBC.KEYS" "#print" "#RaiseError" "#RaErr" "#Concat" "RPR.RPT" "CAE.HLP" "CAE.ABT" "CAE.CFG" "CAE.DAT" "CAE.EDS" "#Calc" "CAE.RBT" "#TimeShow" "#DateShow"
-SET "Version=0.17.3"
+SET CMDS="CAE.EXT" "CAE.CFG" "CAE.CLR" "SYSC HLT" "SYSC RBT" "SYSC HIB" "SYSC HCF" "SYSC KBC CHK" "SYSC KBC CPD" "KBC.KEYS" "#print" "#RaiseError" "#RE" "#concat" "RPR.RPT" "CAE.HLP" "CAE.ABT" "CAE.CFG" "CAE.DAT" "CAE.EDS" "#calc" "CAE.RBT" "#TS" "#DS"
+SET "Version=0.18.0"
 SET "SpecialVersionType="
 SET "VersionType=CLOSED BETA"
 SET "Edition=DEVELOPER"
@@ -20,6 +20,8 @@ IF "!SpecialVersionType!"=="" (
 ) ELSE (
    SET "InitWinTitle=CYBER-ASSEMBLY 2.0 ASSEMBLER EMULATOR VERSION !Version! !VersionType! !SpecialVersionType! - !Edition! EDITION"
 )
+SET /A "delay=4"
+SET /A "delay+=1"
 :MAIN
 ECHO:
 ECHO  !InitWinTitle!
@@ -37,10 +39,10 @@ IF "!Instr!"=="CAE.EXT" (
    PING localhost -n 4 > NUL
    ECHO:
    ECHO  EMULATOR SESSION TERMINATED
-   ECHO:
-   ECHO:
    ENDLOCAL DisableDelayedExpansion
    ENDLOCAL DisableExtensions
+   ECHO:
+   ECHO:
    EXIT
 )
 IF "!Instr!"=="CAE.CLR" (
@@ -60,6 +62,7 @@ IF "!Instr!"=="SYSC HIB" (
    ECHO  !ExecProc! ^^!^> ^0 : EMULATOR CAN NOT HIBERNATE A COMPONENT
    GOTO :INIT
 )
+:: -- KBC INSTRUCTIONS -- ::
 IF "!Instr!"=="SYSC KBC CHK" (
    SET "WinTitle=CYBER-ASSEMBLY 2.0 ASSEMBLER EMULATOR - SYSTEM FAILURE"
    TITLE !WinTitle!
@@ -167,7 +170,7 @@ IF "!Instr!"=="#RaiseError" (
    GOTO :INIT
 )
 
-IF "!Instr!"=="#RaErr" (
+IF "!Instr!"=="#RE" (
    SET /P msg="?> msg [STR]: "
    SET /P errLvl="?> errLvl [INT]: "
    SET /P statCode="?> statCode [INT]: "
@@ -181,14 +184,14 @@ IF "!Instr!"=="#RaErr" (
    )
    GOTO :INIT
 )
-IF "!Instr!"=="#Concat" (
+IF "!Instr!"=="#concat" (
    SET /P str1="?> firstString [STR]: "
    SET /P str2="?> secondString [STR]: "
-   SET "ConcatString=!str1! !str2!"
+   SET "ConcatString=!str1!!str2!"
    ECHO  #^> !ConcatString!
    GOTO :INIT
 )
-IF "!Instr!"=="#Calc" (
+IF "!Instr!"=="#calc" (
    SET OPS="+" "-" "*" "/"
    SET /P "fNum=?> firstNumber [INT]: "
    SET /P "Op=?> Operation [STR]: "
@@ -234,14 +237,14 @@ IF "!Instr!"=="#Array" (
    ECHO  !ExecProc! ^^!^> ^0 : ARRAYS ARE UNVAILABLE IN THE EMULATOR
    GOTO :INIT
 )
-IF "!Instr!"=="#TimeShow" (
+IF "!Instr!"=="#TS" (
    FOR /F "delims=" %%i IN ('TIME /T') DO (
       SET TIME=%%i
       )
       ECHO  #^> !TIME!
    GOTO :INIT
 )
-IF "!Instr!"=="#DateShow" (
+IF "!Instr!"=="#DS" (
    FOR /F "delims=" %%i IN ('DATE /T') DO (
       SET DATE=%%i
       )
@@ -256,7 +259,7 @@ IF "!Instr!"=="RPR.RPT" (
 :: -- CAE INSTRUCTIONS -- ::
 IF "!Instr!"=="CAE.HLP" (
    ECHO  ---------- CYBER-ASSEMBLY 2.0 ASSEMBLER EMULATOR: HELP FILE -------------------------------
-   ECHO    "CAE.CLR" : Clears output.
+   ECHO    "CAE.CLR" : Clears output. 
    ECHO    "SYSC KBC" : Crash the emulator. HELP FILE: "KBC.KEYS"
    ECHO    "CAE.EXT" : Exits the Emulator
    ECHO    "CAE.HLP" : Summons this help file
@@ -267,11 +270,11 @@ IF "!Instr!"=="CAE.HLP" (
    ECHO    "CAE.RBT" : Restarts the Emulator
    ECHO    "#print" : Outputs something
    ECHO    "#RaiseError" : Outputs a custom error message
-   ECHO    "#RaErr" : Alias of above
-   ECHO    "#Concat" : Concatenates two strings ^(No spaces^)
-   ECHO    "#Calc" : Calculates the result of two integers
-   ECHO    "#TimeShow" : Displays the current system time
-   ECHO    "#DateShow" : Displays the current system date
+   ECHO    "#RE" : Alias of above
+   ECHO    "#concat" : Concatenates two strings ^(Include spaces^)
+   ECHO    "#calc" : Calculates the result of two integers
+   ECHO    "#TS" : Displays the current system time
+   ECHO    "#DS" : Displays the current system date
    ECHO  -------------------------------------------------------------------------------------------
    ECHO:
    ECHO:
@@ -302,12 +305,14 @@ IF "!Instr!"=="CAE.ABT" (
    GOTO :INIT
 )
 IF "!Instr!"=="CAE.RBT" (
+   ECHO RESTARTING EMULATOR SESSION...
+   PING localhost -n !delay! > NUL
    ENDLOCAL DisableDelayedExpansion
    ENDLOCAL DisableExtensions
    GOTO :STRT
 )
 IF "!Instr!"=="CAE.CFG" (
-   SET CFG-CMDS="HLP" "SET EP" "SET WT" "EXT" "GET EP" "GET WT" "SET WT -F" "SET WT -R"
+   SET CFG-CMDS="HLP" "SET EP" "SET WT" "EXT" "GET EP" "GET WT" "SET WT -F" "SET WT -R" "GET DY" "SET DY"
    ECHO EXECUTE "HLP" TO SUMMON HELP FILE.
    :: -------------------------- ::
    :CFG_INIT
@@ -322,12 +327,13 @@ IF "!Instr!"=="CAE.CFG" (
       ECHO    "EXT" : EXIT CONFIGURATION
       ECHO    "GET EP" : GETS THE EXECUTING PROCESSOR
       ECHO    "GET WT" : GETS THE WINDOW TITLE
-      ECHO    "GET TME" : GETS CURRENT TIME
+      ECHO    "GET DY" : GETS CURRENT RESTART DELAY
+      ECHO    "SET DY" : SETS RESTART DELAY ^(WILL AUTOMATICALLY INCREMENT BY 1^)
       ECHO  ------------------------------------------------------------------------------------
       GOTO :CFG_INIT
    )
    IF "!cfgType!"=="SET EP" (
-      SET /P ExecProc="Executing Processor: "
+      SET /P ExecProc="ExecProc [STR]: "
       ECHO:
       ECHO  EXECUTING PROCESSOR CHANGED TO "!ExecProc!" 
       GOTO :CFG_INIT
@@ -359,6 +365,17 @@ IF "!Instr!"=="CAE.CFG" (
    )
     IF "!cfgType!"=="GET WT" (
       ECHO  WINDOW TITLE : "!WinTitle!"
+      GOTO :CFG_INIT
+   )
+   IF "!cfgType!"=="GET DY" (
+      ECHO:
+      ECHO CURRENT RESTART DELAY IS "!delay!"
+      GOTO :CFG_INIT
+   )
+   IF "!cfgType!"=="SET DY" (
+      SET /P delay="delay [INT]: "
+      SET /A "delay+=1"
+      ECHO RESTART DELAY IS NOW "!delay!"
       GOTO :CFG_INIT
    )
    IF "!cfgType!"=="" (
