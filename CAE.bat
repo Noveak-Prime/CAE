@@ -241,14 +241,14 @@ IF "!Instr!"=="#TS" (
    FOR /F "delims=" %%i IN ('TIME /T') DO (
       SET TIME=%%i
       )
-      ECHO  #^> !TIME!
+      ECHO  #^> CURRENT TIME: !TIME!
    GOTO :INIT
 )
 IF "!Instr!"=="#DS" (
    FOR /F "delims=" %%i IN ('DATE /T') DO (
       SET DATE=%%i
       )
-      ECHO  #^> !DATE!
+      ECHO  #^> CURRENT DATE: !DATE!
    GOTO :INIT
 )
 :: -- INSTRUCTIONS -- ::
