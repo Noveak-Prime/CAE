@@ -6,14 +6,14 @@ SETLOCAL EnableExtensions
 MODE CON: CP SELECT=65001>NUL
 :: -- SCRIPT START -- ::
 CLS
-SET CMDS="CAE.EXT" "CAE.CFG" "CAE.CLR" "SYSC HLT" "SYSC RBT" "SYSC HIB" "SYSC HCF" "SYSC KBC CHK" "SYSC KBC CPD" "KBC.KEYS" "#print" "#RaiseError" "#RE" "#concat" "RPR.RPT" "CAE.HLP" "CAE.ABT" "CAE.CFG" "CAE.DAT" "CAE.EDS" "#calc" "CAE.RBT" "#TS" "#DS"
-SET "Version=0.18.0"
+SET CMDS="CAE.EXT" "CAE.CFG" "CAE.CLR" "SYSC HLT" "SYSC RBT" "SYSC HIB" "SYSC HCF" "SYSC KBC CHK" "SYSC KBC CPD" "KBC.KEYS" "#print" "#RaiseError" "#RaErr" "#concat" "RPR.RPT" "CAE.HLP" "CAE.ABT" "CAE.CFG" "CAE.DAT" "CAE.EDS" "#calc" "CAE.RBT" "#TS" "#DS"
+SET "Version=0.18.3"
 SET "SpecialVersionType="
 SET "VersionType=CLOSED BETA"
-SET "Edition=DEVELOPER"
+SET "Edition=DEFINITIVE"
 SET "WinTitle=CYBER-ASSEMBLY 2.0 ASSEMBLER EMULATOR"
 TITLE !WinTitle!
-SET "QuotWarn=ALWAYS KEEP IN MIND: IGNORE ALL QUOTATION MARKS EXCEPT IN ERROR MESSAGES (MESSAGE WILL ONLY BE SHOWN ONCE PER SESSION)"
+SET "QuotWarn=ALWAYS KEEP IN MIND: IGNORE ALL QUOTATION MARKS EXCEPT IN ERROR MESSAGES (THIS MESSAGE WILL ONLY BE SHOWN ONCE PER SESSION)"
 SET "ExecProc=MProc"
 IF "!SpecialVersionType!"=="" (
    SET "InitWinTitle=CYBER-ASSEMBLY 2.0 ASSEMBLER EMULATOR VERSION !Version! !VersionType! - !Edition! EDITION"
@@ -160,26 +160,26 @@ IF "!Instr!"=="#RaiseError" (
    SET /P errLvl="?> errLvl [INT]: "
    SET /P statCode="?> statCode [INT]: "
    IF "!errLvl!"=="1" (
-      ECHO  #^> A CRITICAL ERROR HAS OCCURED: !msg!^. STAT_CODE: !statCode!^. EXECUTION WILL NOW HALT.
+      ECHO  #^> A CRITICAL ERROR HAS OCCURRED: !msg!^. ^(!statCode!^)^. HALTING EXECUTION.
       GOTO :INIT
    )
    IF "!errLvl!"=="0" (
-      ECHO  #^> AN ERROR HAS OCCURED: !msg!^. STAT_CODE: !statCode!^. EXECUTION WILL CONTINUE
+      ECHO  #^> AN ERROR HAS OCCURRED: !msg!^. ^(!statCode!^)^. CONTINUING EXECUTION
       GOTO :INIT
    )
    GOTO :INIT
 )
 
-IF "!Instr!"=="#RE" (
+IF "!Instr!"=="#RaErr" (
    SET /P msg="?> msg [STR]: "
    SET /P errLvl="?> errLvl [INT]: "
    SET /P statCode="?> statCode [INT]: "
    IF "!errLvl!"=="1" (
-      ECHO  #^> A CRITICAL ERROR HAS OCCURED: !msg!^. RETURN CODE: !statCode!^. EXECUTION WILL NOW HALT.
+      ECHO  #^> A CRITICAL ERROR HAS OCCURRED: !msg!^. ^(!statCode!^)^. HALTING EXECUTION.
       GOTO :INIT
    )
    IF "!errLvl!"=="0" (
-      ECHO  #^> AN ERROR HAS OCCURED: !msg!^. RETURN CODE: !statCode!^. EXECUTION WILL CONTINUE.
+      ECHO  #^> AN ERROR HAS OCCURRED: !msg!^. ^(!statCode!^)^. CONTINUING EXECUTION
       GOTO :INIT
    )
    GOTO :INIT
@@ -241,14 +241,14 @@ IF "!Instr!"=="#TS" (
    FOR /F "delims=" %%i IN ('TIME /T') DO (
       SET TIME=%%i
       )
-      ECHO  #^> CURRENT TIME: !TIME!
+      ECHO  #^> !TIME!
    GOTO :INIT
 )
 IF "!Instr!"=="#DS" (
    FOR /F "delims=" %%i IN ('DATE /T') DO (
       SET DATE=%%i
       )
-      ECHO  #^> CURRENT DATE: !DATE!
+      ECHO  #^> !DATE!
    GOTO :INIT
 )
 :: -- INSTRUCTIONS -- ::
@@ -270,7 +270,7 @@ IF "!Instr!"=="CAE.HLP" (
    ECHO    "CAE.RBT" : Restarts the Emulator
    ECHO    "#print" : Outputs something
    ECHO    "#RaiseError" : Outputs a custom error message
-   ECHO    "#RE" : Alias of above
+   ECHO    "#RaErr" : Alias of above
    ECHO    "#concat" : Concatenates two strings ^(Include spaces^)
    ECHO    "#calc" : Calculates the result of two integers
    ECHO    "#TS" : Displays the current system time
@@ -286,7 +286,7 @@ IF "!Instr!"=="CAE.HLP" (
    ECHO:
    ECHO:
    ECHO  ------------------------------- RETURN SYMBOLS --------------------------------------------
-   ECHO    "§>" : Processor result. EXAMPLE: "§> String: regular text"
+   ECHO    "§>" : Processor result. EXAMPLE: "§> String: regular text" ^(Not currently used^)
    ECHO    "^!>" : Processor returned error. EXAMPLE: "%ExecProc% ^!> 0: INSTRUCTION NOT FOUND"
    ECHO    "?>" : Argument prompt. EXAMPLE: "?> output [STR]:"
    ECHO    "#>" : Function output. EXAMPLE: "#> Example"
@@ -318,7 +318,7 @@ IF "!Instr!"=="CAE.CFG" (
    :CFG_INIT
    @SET "cfgType="
    ECHO:
-   SET /P cfgType="CAE_CFG> "
+   SET /P cfgType=">>> "
    :: -------------------------- ::
    IF "!cfgType!"=="HLP" (
       ECHO  ---- CYBER-ASSEMBLY 2.0 ASSEMBLER EMULATOR CONFIGURATION: HELP FILE ----------------
