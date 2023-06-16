@@ -4,9 +4,5 @@ The *Cyber-Assembly Assembler Emulator* is a Batch program created to emulate th
 <br>
 <br>
 
-### **CANCELLING DEVELOPMENT**
-Since Batch is such a confusing language to work with, the Batch version of the *Cyber-Assembly Assembler Emulator* will cease in development, and be replaced with Python. However, this will take time as the dev team consists of one singular individual.
-<br>
-<br>
 ### **DEFINITIVE RELEASE**
 Version `0.18.3` is the final version of the *Cyber-Assembly Assembler Emulator* in Batch form. There will be no more releases.
