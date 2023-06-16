@@ -12,7 +12,7 @@ CLS
 SET CMDS="CAE.EXT" "CAE.CFG" "CAE.CLR" "SYSC HLT" "SYSC RBT" "SYSC HIB" "SYSC HCF" "SYSC KBC CHK" "SYSC KBC CPD" "KBC.KEYS" "#print" "#RaiseError" "#RaErr" "#concat" "RPR.RPT" "CAE.HLP" "CAE.ABT" "CAE.CFG" "CAE.DAT" "CAE.EDS" "#calc" "CAE.RBT" "#TS" "#DS"
 SET "Version=0.18.3"
 SET "SpecialVersionType="
-SET "VersionType=CLOSED BETA"
+SET "VersionType=RELEASE"
 SET "Edition=DEFINITIVE"
 SET "WinTitle=CYBER-ASSEMBLY 2.0 ASSEMBLER EMULATOR"
 TITLE !WinTitle!
