@@ -1,5 +1,5 @@
 :: LICENSE: CC BY-NC-SA
-:: LINk: https://creativecommons.org/licenses/#:~:text=Attribution%2DNonCommercial%2DShareAlike-,CC%20BY%2DNC%2DSA,-This%20license%20lets
+:: LINK: https://creativecommons.org/licenses/#:~:text=Attribution%2DNonCommercial%2DShareAlike-,CC%20BY%2DNC%2DSA,-This%20license%20lets
 
 :: -- SET-UP -- ::
 :STRT
