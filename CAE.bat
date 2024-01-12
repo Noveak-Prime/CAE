@@ -1,5 +1,4 @@
-:: LICENSE: CC BY-NC-SA
-:: LINK: https://creativecommons.org/licenses/#:~:text=Attribution%2DNonCommercial%2DShareAlike-,CC%20BY%2DNC%2DSA,-This%20license%20lets
+:: LICENSE: GNU Lesser General Public License v2.1
 
 :: -- SET-UP -- ::
 :STRT
